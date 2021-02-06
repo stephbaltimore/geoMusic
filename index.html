@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>music by country</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="icon" href="data:;base64,=">
+  </head>
+  <body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Geo<b>Music</b>
+      </h1>
+      <p class="subtitle">
+        look up top tracks by country 
+      </p>
+        <div class="block column is-four-fifths">
+        <textarea id="user-input" class="textarea" placeholder="Enter a country to explore top music chart (example: Spain)"></textarea>
+        <br>
+        <button id="user-input-button" class="button is-primary" type="submit">Run</button>
+        </div>
+        
+          <div id="chart-content" class="container content"> 
+
+            <h2><b>Top Tracks from [Country]</b></h2>
+
+            <table id="add-data-points" class="table is-narrow">
+              <thead>
+                <tr class="is-selected">
+                  <th><abbr title="Position">#</abbr></th>
+                  <th>Artist</th>
+                  <th><abbr>Song</abbr></th>
+                  <th>Listen</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th><abbr title="Position">#</abbr></th>
+                  <th>Artist</th>
+                  <th><abbr>Song</abbr></th>
+                  <th>Listen</th>
+                </tr>
+              </tfoot>
+            </table>
+      
+          </div>
+  </div>
+  </section>
+  
+  <!-- js -->
+  <script src="src/app.js" type="module"></script>
+  <!--end js-->
+  </body>
+</html>
