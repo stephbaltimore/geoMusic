@@ -79,46 +79,50 @@ async function onLoadHandler() {
 
   //call lastFM API with the data
   const lastFMdata = await callLastFmApi(visitorCountry);
-  lastFMdata;
-  console.log("look here->", lastFMdata.tracks.track)
+  console.log("look here->", Object.keys(lastFMdata.tracks.track)[0])
+  console.log("type->", typeof(Object.keys(lastFMdata.tracks.track)))
 
-  addSongDataToPage(lastFMdata);
+  addSongDataToPage(lastFMdata, visitorCountry);
 
 };
 
 // // chart styling
 
-function addSongDataToPage(lastFMdata) {
 
+function addSongDataToPage(lastFMdata, visitorCountry) {
 
-const changeH2Text = document.getElementById("country-headline")
-changeH2Text.innerHTML = "Top Tracks from Country"
+let number = 0
+
+for (const [key, value] of Object.entries(lastFMdata.tracks.track)) {
+
+const changeH2Text = document.getElementById("country-headline");
+changeH2Text.innerHTML = visitorCountry;
 
 const tbodyElement = document.createElement("tbody"); // Create a <tbody> node
 document.getElementById("add-data-points").appendChild(tbodyElement); // Append to table
-
 const trElement = document.createElement("tr"); // Create a <tr> node
 tbodyElement.appendChild(trElement);  // Append to tbody
 
 const thElement = document.createElement("th"); // Create a <th> node
-const thText = document.createTextNode("1"); // Create a th text node
+const displayNumber = Number(Object.keys(lastFMdata.tracks.track)[key]) + 1;
+const thText = document.createTextNode(displayNumber); // Create a th text node
 thElement.appendChild(thText);  // Append the text 
 trElement.appendChild(thElement);  // Append to tr
 
 const tdElement = document.createElement("td"); // Create a <td> node
-const artistTdText = document.createTextNode("Name of Artist"); // Create a td text node
+const artistTdText = document.createTextNode(lastFMdata.tracks.track[key].artist.name); // Create a td text node
 tdElement.appendChild(artistTdText);  // Append the text 
 trElement.appendChild(tdElement);  // Append to tr
 
 const tdElement2 = document.createElement("td"); // Create a <td> 2 node
-const songNameTdText = document.createTextNode("Song Name"); // Create a td text node
+const songNameTdText = document.createTextNode(lastFMdata.tracks.track[key].name); // Create a td text node
 tdElement2.appendChild(songNameTdText);  // Append the text 
 trElement.appendChild(tdElement2);  // Append to tr
 
 const tdElement3 = document.createElement("td"); // Create a <td> 2 node
 const playLinkTag = document.createElement("a"); // Create a <a> node
 tdElement3.appendChild(playLinkTag);  // Append the text
-playLinkTag.setAttribute("href", "http://www.google.com"); // URL path
+playLinkTag.setAttribute("href", lastFMdata.tracks.track[key].url); // URL path
 playLinkTag.setAttribute("target", "_blank"); // URL path
 const playSongText = document.createElement("img"); // Create a img
 playSongText.setAttribute("src", "./img/play-circle.png"); // img URL path
@@ -127,6 +131,7 @@ trElement.appendChild(tdElement3);  // Append to tr
 
 document.getElementById("chart-content").classList.remove('is-hidden');
 
+}
 };
 // // end chart styling
 
