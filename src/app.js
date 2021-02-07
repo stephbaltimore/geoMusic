@@ -28,12 +28,23 @@ const lastFMParams = {
     console.log('Success for ', lastFMUrl);
   }
   
+  console.log("data here->", json)
   return json;
   
 
 };
 
 // end - lastFM data pull
+
+// title case user input
+function titleCase(str) {
+  str = str.toLowerCase().split(' ');
+  for (var i = 0; i < str.length; i++) {
+    str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1); 
+  }
+  return str.join(' ');
+}
+// end - title case user input
 
 // start - code runs on page load
 async function onLoadHandler() {
@@ -70,9 +81,15 @@ async function onLoadHandler() {
 };
 // end - code runs on page load
 
-
+// button listener for user input
 
 async function buttonListener() {
+
+
+// set of countries following ISO 3166-1-alpha-2 standard
+ const countries = ["Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua And Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia, Plurinational State Of", "Bonaire, Sint Eustatius And Saba", "Bosnia And Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (keeling) Islands", "Colombia", "Comoros", "Congo", "Congo, The Democratic Republic Of The", "Cook Islands", "Costa Rica", "Côte D'ivoire", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-bissau", "Guyana", "Haiti", "Heard Island And Mcdonald Islands", "Holy See (vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran, Islamic Republic Of", "Iraq", "Ireland", "Isle Of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, Democratic People's Republic Of", "Korea, Republic Of", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Macedonia, The Former Yugoslav Republic Of", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States Of", "Moldova, Republic Of", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Palestine, State Of", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Réunion", "Romania", "Russian Federation", "Rwanda", "Saint Barthélemy", "Saint Helena, Ascension And Tristan Da Cunha", "Saint Kitts And Nevis", "Saint Lucia", "Saint Martin (french Part)", "Saint Pierre And Miquelon", "Saint Vincent And The Grenadines", "Samoa", "San Marino", "Sao Tome And Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten (dutch Part)", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia And The South Sandwich Islands", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard And Jan Mayen", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan, Province Of China", "Tajikistan", "Tanzania, United Republic Of", "Thailand", "Timor-leste", "Togo", "Tokelau", "Tonga", "Trinidad And Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks And Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela, Bolivarian Republic Of", "Viet Nam", "Virgin Islands, British", "Virgin Islands, U.s.", "Wallis And Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"];
+
+
   // button functionality
         //button click listener + action begin
         const btn = document.getElementById('user-input-button');
@@ -85,31 +102,75 @@ async function buttonListener() {
       //button click listener + action end
       document.getElementById("user-input-button").classList.add("is-loading");
   
-      const userInputCountry = inputElement.value         
-      const userInputApiCall = await callLastFmApi(userInputCountry);
-      
-      document.getElementById("chart-content").classList.add("is-hidden")
-      document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
-      
-      setTimeout(() => {  addSongDataToPage(userInputApiCall, userInputCountry); }, 2001);
-      setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 2000);
-      setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 2000);
-      setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+      const userInputCountry = titleCase(inputElement.value)
 
-      //clear input begin
-        inputElement.value = '';
-      //clear input end
-        });
-      // end button functionality
+      if (countries.includes(userInputCountry)) {
+        
+        const userInputApiCall = await callLastFmApi(userInputCountry);
+
+        document.getElementById("user-input-button").classList.remove("is-warning");
+        document.getElementById("chart-content").classList.add("is-hidden")
+        document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
+        
+        document.getElementById("user-input-button").classList.remove("is-danger");
+        document.getElementById("user-input").classList.remove("is-danger")
+        setTimeout(() => {  addSongDataToPage(userInputApiCall, userInputCountry); }, 2001);
+        // setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 2000);
+  
+        //clear input begin
+          inputElement.value = '';
+          
+        //clear input end
+
+      }
+      
+      else {
+
+        setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
+        setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
+        setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
+        setTimeout(() => {  inputElement.value = `${userInputCountry} is not a valid country. Try again.`; }, 1000);
+        
+        
+      }
+ 
+     });
+      // end button listen functionality
   
   
   };
+// end - button listener function
 
 
-// // chart styling
+// start - chart styling
 
 function addSongDataToPage(lastFMdata, visitorCountry) {
 
+  console.log("what is happening with data here->", lastFMdata)
+
+  if (lastFMdata.error) {
+      document.getElementById("user-input-button").classList.add("is-loading");
+      document.getElementById("user-input-button").classList.add("is-warning");
+      setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
+      setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
+      setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
+      setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1000);
+      setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1000); 
+      setTimeout(() => {  document.getElementById("user-input").value = `${visitorCountry} is not a valid country. Try again.`; }, 1000);
+      setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 999);
+    return
+    
+    }
+
+  else {
+
+  document.getElementById("user-input-button").classList.remove("is-loading");
+  document.getElementById("user-input-button").classList.remove("is-loading");
+  document.getElementById("user-input-button").classList.remove("is-warning");
+    
 const theadElement = document.createElement("thead"); // Create a <thead> node
 document.getElementById("add-data-points").appendChild(theadElement); // Append to table
 
@@ -145,9 +206,7 @@ let number = 0
 for (const [key, value] of Object.entries(lastFMdata.tracks.track)) {
 
 const changeH2Text = document.getElementById("country-headline");
-changeH2Text.innerHTML = visitorCountry;
-
-console.log("look here->", visitorCountry)
+changeH2Text.innerHTML = `Top Tracks from ${visitorCountry}`;
 
 const trElement = document.createElement("tr"); // Create a <tr> node
 tbodyElement.appendChild(trElement);  // Append to tbody
@@ -180,7 +239,10 @@ trElement.appendChild(tdElement3);  // Append to tr
 
 document.getElementById("chart-content").classList.remove('is-hidden');
 
-}
+  }
+//end - styling data loop
+  }
+//end - keys > 1 loops
 };
 // // end chart styling
 
