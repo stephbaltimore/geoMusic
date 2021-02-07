@@ -1,2 +1,4 @@
 .env.local
 keys.js
+.DS_Store
+.gitignore
