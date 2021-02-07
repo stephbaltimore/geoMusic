@@ -89,7 +89,7 @@ async function buttonListener() {
     
     document.getElementById("add-data-points").innerHTML = ""; //clear all the things
     
-    sleep(100000000000000);
+    sleep(45000);
     
     addSongDataToPage(x, inputElement.value);
     
