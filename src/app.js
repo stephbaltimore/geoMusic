@@ -35,12 +35,6 @@ const lastFMParams = {
 
 // end - lastFM data pull
 
-// start - sleep function so some loading mechanics can be seen
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-// end - sleep function so some loading mechanics can be seen
-
 // start - code runs on page load
 async function onLoadHandler() {
 
@@ -87,13 +81,12 @@ async function buttonListener() {
 
     const x = await callLastFmApi(inputElement.value);
     
-    document.getElementById("add-data-points").innerHTML = ""; //clear all the things
-    
-    sleep(45000);
-    
+    document.getElementById("chart-content").classList.add("is-hidden")
+    document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
+    document.getElementById("chart-content").classList.remove("is-hidden")
+    setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1000);
     addSongDataToPage(x, inputElement.value);
     
-    document.getElementById("user-input-button").classList.remove("is-loading");
     //clear input begin
       inputElement.value = '';
     //clear input end
