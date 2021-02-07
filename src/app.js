@@ -53,6 +53,7 @@ async function onLoadHandler() {
   const detectIP = json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
   const visitorCountry = data.country_name;
   console.log("user country->", visitorCountry)
+  console.log("what you can do with user data", data)
   // end - promise to handle detecting user's location
   return visitorCountry
   });
