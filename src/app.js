@@ -1,12 +1,6 @@
 import { ipDataApiKey } from './keys.js';
 import { lastFmApi } from './keys.js';
 
-// start - promise to handle detecting user's location
-function json(url) {
-  return fetch(url).then(res => res.json());
-}
-// end - promise to handle detecting user's location
-
 // start - lastFM data pull
 
 async function callLastFmApi(country) {
@@ -63,22 +57,33 @@ const lastFMParams = {
 
 async function onLoadHandler() {
 
-  //detect visitor IP
-  json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
+  // start - promise to handle detecting user's location
+  async function json(url) {
+    return fetch(url).then(res => res.json());
+  }
+  
+  async function detectVisitorCountry() {
+
+    const detectIP = json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
   console.log(data)
   console.log(data.country_name);
   const visitorCountry = data.country_name;
   console.log("user country->", visitorCountry)
-  
-  //call API with the data
-  
+  // end - promise to handle detecting user's location
+  return visitorCountry
+  });
+  return detectIP
+  } 
+
+  const visitorCountry = await detectVisitorCountry();
+
+  //call lastFM API with the data
   const lastFMdata = await callLastFmApi(visitorCountry);
   lastFMdata;
-  console.log("look here->", lastFMdata)
+  console.log("look here->", lastFMdata.tracks.track)
 
-  // addSongDataToPage(lastFMdata)
+  addSongDataToPage(lastFMdata);
 
-  });
 };
 
 // // chart styling
