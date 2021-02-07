@@ -1,0 +1,8 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://git.generalassemb.ly/stephbaltimore/geoMusic.git",
+  "author": "stephbaltimore <stephbaltimore@gmail.com>",
+  "license": "MIT"
+}
