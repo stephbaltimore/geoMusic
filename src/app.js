@@ -59,42 +59,51 @@ async function onLoadHandler() {
   //call lastFM API with the data
   const lastFMdata = await callLastFmApi(visitorCountry);
 
-  addSongDataToPage(lastFMdata, visitorCountry);
+  document.getElementById("onLoad").classList.remove("is-hidden");
+
+  setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry); }, 2001);
+  setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
+  setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+
   buttonListener();
+
 };
 // end - code runs on page load
 
 
 
 async function buttonListener() {
-// button functionality
-      //button click listener + action begin
-      const btn = document.getElementById('user-input-button');
-      btn.addEventListener('click', async function(event) {
-        event.preventDefault();
-        // console.log('click');
-    //grabs user input - begin
-        const inputElement = document.getElementById('user-input')
-    //grabs user input - end
-    //button click listener + action end
-    document.getElementById("user-input-button").classList.add("is-loading");
+  // button functionality
+        //button click listener + action begin
+        const btn = document.getElementById('user-input-button');
+        btn.addEventListener('click', async function(event) {
+          event.preventDefault();
+          // console.log('click');
+      //grabs user input - begin
+          const inputElement = document.getElementById('user-input')
+      //grabs user input - end
+      //button click listener + action end
+      document.getElementById("user-input-button").classList.add("is-loading");
+  
+      const userInputCountry = inputElement.value         
+      const userInputApiCall = await callLastFmApi(userInputCountry);
+      
+      document.getElementById("chart-content").classList.add("is-hidden")
+      document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
+      
+      setTimeout(() => {  addSongDataToPage(userInputApiCall, userInputCountry); }, 2001);
+      setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 2000);
+      setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 2000);
+      setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
 
-    const x = await callLastFmApi(inputElement.value);
-    
-    document.getElementById("chart-content").classList.add("is-hidden")
-    document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
-    document.getElementById("chart-content").classList.remove("is-hidden")
-    setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1000);
-    addSongDataToPage(x, inputElement.value);
-    
-    //clear input begin
-      inputElement.value = '';
-    //clear input end
-      });
-    // end button functionality
-
-
-};
+      //clear input begin
+        inputElement.value = '';
+      //clear input end
+        });
+      // end button functionality
+  
+  
+  };
 
 
 // // chart styling
@@ -137,6 +146,8 @@ for (const [key, value] of Object.entries(lastFMdata.tracks.track)) {
 
 const changeH2Text = document.getElementById("country-headline");
 changeH2Text.innerHTML = visitorCountry;
+
+console.log("look here->", visitorCountry)
 
 const trElement = document.createElement("tr"); // Create a <tr> node
 tbodyElement.appendChild(trElement);  // Append to tbody
