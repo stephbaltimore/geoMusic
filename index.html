@@ -16,10 +16,13 @@
       <p class="subtitle">
         look up top tracks by country 
       </p>
+      <div class="columns">
+        <div class="column is-three-quarters">
+<!-- start data column -->
         <div class="block column is-four-fifths">
-        <textarea id="user-input" class="textarea" placeholder="Enter a country to explore top music chart (example: Spain)"></textarea>
-        <br>
-        <button id="user-input-button" class="button is-primary" type="submit">Run</button>
+          <input id="user-input" class="input" type="text" placeholder="Enter a country to explore top music chart (example: Spain)">
+          <br><br>
+        <button id="user-input-button" class="block button is-primary" type="submit">Run</button>
         </div>
         
           <div id="chart-content" class="container content is-hidden"> 
@@ -30,6 +33,15 @@
             </table>
       
           </div>
+  <!-- end data column -->
+</div>
+<div class="block box column content">
+  <h2>Top Cities Visiting:</h2>
+  <ol id="top-cities">
+  </ol>
+</div>
+</div>
+
   </div>
   </section>
   
