@@ -104,6 +104,8 @@ async function buttonListener() {
   
       const userInputCountry = titleCase(inputElement.value)
 
+      console.log("typeof->", typeof(inputElement.value))
+      
       if (countries.includes(userInputCountry)) {
         
         const userInputApiCall = await callLastFmApi(userInputCountry);
@@ -115,7 +117,6 @@ async function buttonListener() {
         document.getElementById("user-input-button").classList.remove("is-danger");
         document.getElementById("user-input").classList.remove("is-danger")
         setTimeout(() => {  addSongDataToPage(userInputApiCall, userInputCountry); }, 2001);
-        // setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 2000);
   
         //clear input begin
           inputElement.value = '';
@@ -123,8 +124,18 @@ async function buttonListener() {
         //clear input end
 
       }
+
+      if (userInputCountry == "" || userInputCountry == " " ) {
+        setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
+        setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
+        setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
+        setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
+      }
       
-      else {
+      if (!countries.includes(userInputCountry)) {
 
         setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
         setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
