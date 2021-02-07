@@ -27,9 +27,6 @@ const lastFMParams = {
   if (rawResponse.ok) {
     console.log('Success for ', lastFMUrl);
   }
-
-  console.log("results ", json.tracks.track);
-  
   
   return json;
   
@@ -38,23 +35,13 @@ const lastFMParams = {
 
 // end - lastFM data pull
 
-// button functionality
-  //button click listener + action begin
-    const btn = document.getElementById('user-input-button');
-    btn.addEventListener('click', function(event) {
-      event.preventDefault();
-      // console.log('click');
-  //grabs user input - begin
-      const inputElement = document.getElementById('user-input')
-  //grabs user input - end
-    callLastFmApi(inputElement.value);
-  //button click listener + action end
-  //clear input begin
-    inputElement.value = '';
-  //clear input end
-    });
-// end button functionality
+// start - sleep function so some loading mechanics can be seen
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+// end - sleep function so some loading mechanics can be seen
 
+// start - code runs on page load
 async function onLoadHandler() {
 
   // start - promise to handle detecting user's location
@@ -63,10 +50,7 @@ async function onLoadHandler() {
   }
   
   async function detectVisitorCountry() {
-
-    const detectIP = json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
-  console.log(data)
-  console.log(data.country_name);
+  const detectIP = json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
   const visitorCountry = data.country_name;
   console.log("user country->", visitorCountry)
   // end - promise to handle detecting user's location
@@ -79,17 +63,79 @@ async function onLoadHandler() {
 
   //call lastFM API with the data
   const lastFMdata = await callLastFmApi(visitorCountry);
-  console.log("look here->", Object.keys(lastFMdata.tracks.track)[0])
-  console.log("type->", typeof(Object.keys(lastFMdata.tracks.track)))
 
   addSongDataToPage(lastFMdata, visitorCountry);
+  buttonListener();
+};
+// end - code runs on page load
+
+
+
+async function buttonListener() {
+// button functionality
+      //button click listener + action begin
+      const btn = document.getElementById('user-input-button');
+      btn.addEventListener('click', async function(event) {
+        event.preventDefault();
+        // console.log('click');
+    //grabs user input - begin
+        const inputElement = document.getElementById('user-input')
+    //grabs user input - end
+    //button click listener + action end
+    document.getElementById("user-input-button").classList.add("is-loading");
+
+    const x = await callLastFmApi(inputElement.value);
+    
+    document.getElementById("add-data-points").innerHTML = ""; //clear all the things
+    
+    sleep(100000000000000);
+    
+    addSongDataToPage(x, inputElement.value);
+    
+    document.getElementById("user-input-button").classList.remove("is-loading");
+    //clear input begin
+      inputElement.value = '';
+    //clear input end
+      });
+    // end button functionality
+
 
 };
 
+
 // // chart styling
 
-
 function addSongDataToPage(lastFMdata, visitorCountry) {
+
+const theadElement = document.createElement("thead"); // Create a <thead> node
+document.getElementById("add-data-points").appendChild(theadElement); // Append to table
+
+const trElementWithClass = document.createElement("tr"); // Create a <tr> node
+trElementWithClass.setAttribute("class", "is-selected"); // set class
+theadElement.appendChild(trElementWithClass);  // Append to thead
+
+const NumberThElement = document.createElement("th"); // Create a <thead> node
+const NumberThText = document.createTextNode("#"); // Create a tr text node
+NumberThElement.appendChild(NumberThText);  // Append the text
+trElementWithClass.appendChild(NumberThElement);  // Append to thead
+
+const ArtistThElement = document.createElement("th"); // Create a <thead> node
+const ArtistThText = document.createTextNode("Artist"); // Create a tr text node
+ArtistThElement.appendChild(ArtistThText);  // Append the text
+trElementWithClass.appendChild(ArtistThElement);  // Append to thead
+
+const SongThElement = document.createElement("th"); // Create a <thead> node
+const SongThText = document.createTextNode("Song"); // Create a tr text node
+SongThElement.appendChild(SongThText);  // Append the text
+trElementWithClass.appendChild(SongThElement);  // Append to thead
+
+const ListenThElement = document.createElement("th"); // Create a <thead> node
+const ListenThText = document.createTextNode("Listen"); // Create a tr text node
+ListenThElement.appendChild(ListenThText);  // Append the text
+trElementWithClass.appendChild(ListenThElement);  // Append to thead
+
+const tbodyElement = document.createElement("tbody"); // Create a <tbody> node
+document.getElementById("add-data-points").appendChild(tbodyElement); // Append to table
 
 let number = 0
 
@@ -98,8 +144,6 @@ for (const [key, value] of Object.entries(lastFMdata.tracks.track)) {
 const changeH2Text = document.getElementById("country-headline");
 changeH2Text.innerHTML = visitorCountry;
 
-const tbodyElement = document.createElement("tbody"); // Create a <tbody> node
-document.getElementById("add-data-points").appendChild(tbodyElement); // Append to table
 const trElement = document.createElement("tr"); // Create a <tr> node
 tbodyElement.appendChild(trElement);  // Append to tbody
 
