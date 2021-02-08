@@ -128,10 +128,16 @@ const ipDataApiKey = "2090cf5a3ded3065453a13bd9d5b0f76596478c4dbf6d65778066237";
 exports.ipDataApiKey = ipDataApiKey;
 const lastFmApi = "f8e8a6e68bea1975052794d9397bd69d";
 exports.lastFmApi = lastFmApi;
+},{}],"img/play-circle.png":[function(require,module,exports) {
+module.exports = "/play-circle.585b5d2d.png";
 },{}],"src/app.js":[function(require,module,exports) {
 "use strict";
 
 var _keys = require("./keys.js");
+
+var _playCircle = _interopRequireDefault(require("/img/play-circle.png"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // start - lastFM data pull
 async function callLastFmApi(country) {
@@ -406,7 +412,7 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
 
       const playSongText = document.createElement("img"); // Create a img
 
-      playSongText.setAttribute("src", "./img/play-circle.png"); // img URL path
+      playSongText.setAttribute("src", _playCircle.default); // img URL path
 
       playLinkTag.appendChild(playSongText);
       trElement.appendChild(tdElement3); // Append to tr
@@ -425,7 +431,7 @@ if (document.readyState === 'loading') {
 } else {
   onLoadHandler();
 }
-},{"./keys.js":"src/keys.js"}],"../../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./keys.js":"src/keys.js","/img/play-circle.png":"img/play-circle.png"}],"../../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -453,7 +459,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56540" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50102" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

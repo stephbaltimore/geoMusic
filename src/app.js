@@ -1,6 +1,8 @@
 import { ipDataApiKey } from './keys.js';
 import { lastFmApi } from './keys.js';
 
+import playButton from '/img/play-circle.png'
+
 // start - lastFM data pull
 
 async function callLastFmApi(country) {
@@ -244,7 +246,7 @@ tdElement3.appendChild(playLinkTag);  // Append the text
 playLinkTag.setAttribute("href", lastFMdata.tracks.track[key].url); // URL path
 playLinkTag.setAttribute("target", "_blank"); // URL path
 const playSongText = document.createElement("img"); // Create a img
-playSongText.setAttribute("src", "./img/play-circle.png"); // img URL path
+playSongText.setAttribute("src", playButton); // img URL path
 playLinkTag.appendChild(playSongText);
 trElement.appendChild(tdElement3);  // Append to tr
 
