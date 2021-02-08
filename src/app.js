@@ -170,7 +170,7 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
       setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
       setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1000);
       setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1000); 
-      setTimeout(() => {  document.getElementById("user-input").value = `${visitorCountry} is not a valid country. Try again.`; }, 1000);
+      setTimeout(() => {  document.getElementById("user-input").value = `${visitorCountry} is not a valid country for this data set. Try again.`; }, 1000);
       setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 999);
     return
     
