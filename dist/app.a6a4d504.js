@@ -124,91 +124,45 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.lastFmApi = exports.ipDataApiKey = void 0;
-var ipDataApiKey = '2090cf5a3ded3065453a13bd9d5b0f76596478c4dbf6d65778066237';
+const ipDataApiKey = "2090cf5a3ded3065453a13bd9d5b0f76596478c4dbf6d65778066237";
 exports.ipDataApiKey = ipDataApiKey;
-var lastFmApi = "f8e8a6e68bea1975052794d9397bd69d";
+const lastFmApi = "f8e8a6e68bea1975052794d9397bd69d"; // // attemping environment process
+// export const ipDataApiKey = process.env.IP_DATA_API;
+// export const lastFmApi = process.env.LAST_FM_API;
+
 exports.lastFmApi = lastFmApi;
 },{}],"src/app.js":[function(require,module,exports) {
 "use strict";
 
 var _keys = require("./keys.js");
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 // start - lastFM data pull
-function callLastFmApi(_x) {
-  return _callLastFmApi.apply(this, arguments);
-}
+async function callLastFmApi(country) {
+  const lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
+  const lastFMParams = {
+    'method': 'geo.gettoptracks',
+    'country': country,
+    'api_key': _keys.lastFmApi,
+    'format': 'json'
+  }; // add query string to URL
 
-function _callLastFmApi() {
-  _callLastFmApi = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(country) {
-    var lastFMUrl, lastFMParams, rawResponse, json;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
-            lastFMParams = {
-              'method': 'geo.gettoptracks',
-              'country': country,
-              'api_key': _keys.lastFmApi,
-              'format': 'json'
-            }; // add query string to URL
+  lastFMUrl.search = new URLSearchParams(lastFMParams).toString(); // fetch resource
 
-            lastFMUrl.search = new URLSearchParams(lastFMParams).toString(); // fetch resource
+  const rawResponse = await fetch(lastFMUrl);
+  const json = await rawResponse.json();
 
-            _context.next = 5;
-            return fetch(lastFMUrl);
+  if (!rawResponse.ok) {
+    alert('failed to load API', lastFMUrl); // we want to stop execution if there is an error
 
-          case 5:
-            rawResponse = _context.sent;
-            _context.next = 8;
-            return rawResponse.json();
+    return;
+  }
 
-          case 8:
-            json = _context.sent;
+  if (rawResponse.ok) {
+    console.log('Success for ', lastFMUrl);
+  }
 
-            if (rawResponse.ok) {
-              _context.next = 12;
-              break;
-            }
-
-            alert('failed to load API', lastFMUrl); // we want to stop execution if there is an error
-
-            return _context.abrupt("return");
-
-          case 12:
-            if (rawResponse.ok) {
-              console.log('Success for ', lastFMUrl);
-            }
-
-            console.log("data here->", json);
-            return _context.abrupt("return", json);
-
-          case 15:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-  return _callLastFmApi.apply(this, arguments);
+  console.log("data here->", json);
+  return json;
 }
 
 ; // end - lastFM data pull
@@ -226,232 +180,106 @@ function titleCase(str) {
 // start - code runs on page load
 
 
-function onLoadHandler() {
-  return _onLoadHandler.apply(this, arguments);
-}
+async function onLoadHandler() {
+  // start - promise to handle detecting user's location
+  async function json(url) {
+    return fetch(url).then(res => res.json());
+  }
 
-function _onLoadHandler() {
-  _onLoadHandler = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-    var json, _json, detectVisitorCountry, _detectVisitorCountry, visitorCountry, lastFMdata;
+  async function detectVisitorCountry() {
+    const detectIP = json("https://api.ipdata.co?api-key=".concat(_keys.ipDataApiKey)).then(data => {
+      const visitorCountry = data.country_name;
+      console.log("user country->", visitorCountry);
+      console.log("what you can do with user data", data); // end - promise to handle detecting user's location
 
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            _detectVisitorCountry = function _detectVisitorCountry3() {
-              _detectVisitorCountry = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-                var detectIP;
-                return regeneratorRuntime.wrap(function _callee3$(_context3) {
-                  while (1) {
-                    switch (_context3.prev = _context3.next) {
-                      case 0:
-                        detectIP = json("https://api.ipdata.co?api-key=".concat(_keys.ipDataApiKey)).then(function (data) {
-                          var visitorCountry = data.country_name;
-                          console.log("user country->", visitorCountry);
-                          console.log("what you can do with user data", data); // end - promise to handle detecting user's location
+      return visitorCountry;
+    });
+    return detectIP;
+  }
 
-                          return visitorCountry;
-                        });
-                        return _context3.abrupt("return", detectIP);
+  const visitorCountry = await detectVisitorCountry(); //call lastFM API with the data
 
-                      case 2:
-                      case "end":
-                        return _context3.stop();
-                    }
-                  }
-                }, _callee3);
-              }));
-              return _detectVisitorCountry.apply(this, arguments);
-            };
-
-            detectVisitorCountry = function _detectVisitorCountry2() {
-              return _detectVisitorCountry.apply(this, arguments);
-            };
-
-            _json = function _json3() {
-              _json = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(url) {
-                return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                  while (1) {
-                    switch (_context2.prev = _context2.next) {
-                      case 0:
-                        return _context2.abrupt("return", fetch(url).then(function (res) {
-                          return res.json();
-                        }));
-
-                      case 1:
-                      case "end":
-                        return _context2.stop();
-                    }
-                  }
-                }, _callee2);
-              }));
-              return _json.apply(this, arguments);
-            };
-
-            json = function _json2(_x2) {
-              return _json.apply(this, arguments);
-            };
-
-            _context4.next = 6;
-            return detectVisitorCountry();
-
-          case 6:
-            visitorCountry = _context4.sent;
-            _context4.next = 9;
-            return callLastFmApi(visitorCountry);
-
-          case 9:
-            lastFMdata = _context4.sent;
-            document.getElementById("onLoad").classList.remove("is-hidden");
-            setTimeout(function () {
-              addSongDataToPage(lastFMdata, visitorCountry);
-            }, 2001);
-            setTimeout(function () {
-              document.getElementById("onLoad").classList.add("is-hidden");
-            }, 2000);
-            setTimeout(function () {
-              document.getElementById("chart-content").classList.remove("is-hidden");
-            }, 2000);
-            buttonListener();
-
-          case 15:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-  return _onLoadHandler.apply(this, arguments);
+  const lastFMdata = await callLastFmApi(visitorCountry);
+  document.getElementById("onLoad").classList.remove("is-hidden");
+  setTimeout(() => {
+    addSongDataToPage(lastFMdata, visitorCountry);
+  }, 2001);
+  setTimeout(() => {
+    document.getElementById("onLoad").classList.add("is-hidden");
+  }, 2000);
+  setTimeout(() => {
+    document.getElementById("chart-content").classList.remove("is-hidden");
+  }, 2000);
+  buttonListener();
 }
 
 ; // end - code runs on page load
 // button listener for user input
 
-function buttonListener() {
-  return _buttonListener.apply(this, arguments);
-}
+async function buttonListener() {
+  // set of countries following ISO 3166-1-alpha-2 standard
+  const countries = ["Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua And Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia And Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (keeling) Islands", "Colombia", "Comoros", "Congo", "Congo, The Democratic Republic Of The", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-bissau", "Guyana", "Haiti", "Heard Island And Mcdonald Islands", "Holy See (vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran, Islamic Republic Of", "Iraq", "Ireland", "Isle Of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, Democratic People's Republic Of", "Korea, Republic Of", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States Of", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Romania", "Russian Federation", "Rwanda", "Saint Barthélemy", "Saint Kitts And Nevis", "Saint Lucia", "Saint Pierre And Miquelon", "Saint Vincent And The Grenadines", "Samoa", "San Marino", "Sao Tome And Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia And The South Sandwich Islands", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard And Jan Mayen", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan", "Tajikistan", "Tanzania, United Republic Of", "Thailand", "Timor-leste", "Togo", "Tokelau", "Tonga", "Trinidad And Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks And Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Viet Nam", "Virgin Islands, British", "Virgin Islands, U.s.", "Wallis And Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"]; // button functionality
+  //button click listener + action begin
 
-function _buttonListener() {
-  _buttonListener = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-    var countries, btn;
-    return regeneratorRuntime.wrap(function _callee6$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            // set of countries following ISO 3166-1-alpha-2 standard
-            countries = ["Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua And Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia And Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (keeling) Islands", "Colombia", "Comoros", "Congo", "Congo, The Democratic Republic Of The", "Cook Islands", "Costa Rica", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-bissau", "Guyana", "Haiti", "Heard Island And Mcdonald Islands", "Holy See (vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran, Islamic Republic Of", "Iraq", "Ireland", "Isle Of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, Democratic People's Republic Of", "Korea, Republic Of", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Micronesia, Federated States Of", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Romania", "Russian Federation", "Rwanda", "Saint Barthélemy", "Saint Kitts And Nevis", "Saint Lucia", "Saint Pierre And Miquelon", "Saint Vincent And The Grenadines", "Samoa", "San Marino", "Sao Tome And Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia And The South Sandwich Islands", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard And Jan Mayen", "Swaziland", "Sweden", "Switzerland", "Syrian Arab Republic", "Taiwan", "Tajikistan", "Tanzania, United Republic Of", "Thailand", "Timor-leste", "Togo", "Tokelau", "Tonga", "Trinidad And Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks And Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Viet Nam", "Virgin Islands, British", "Virgin Islands, U.s.", "Wallis And Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"]; // button functionality
-            //button click listener + action begin
+  const btn = document.getElementById('user-input-button');
+  btn.addEventListener('click', async function (event) {
+    event.preventDefault(); // console.log('click');
+    //grabs user input - begin
 
-            btn = document.getElementById('user-input-button');
-            btn.addEventListener('click', /*#__PURE__*/function () {
-              var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(event) {
-                var inputElement, userInputCountry, userInputApiCall;
-                return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                  while (1) {
-                    switch (_context5.prev = _context5.next) {
-                      case 0:
-                        event.preventDefault(); // console.log('click');
-                        //grabs user input - begin
+    const inputElement = document.getElementById('user-input'); //grabs user input - end
+    //button click listener + action end
 
-                        inputElement = document.getElementById('user-input'); //grabs user input - end
-                        //button click listener + action end
+    document.getElementById("user-input-button").classList.add("is-loading");
+    const userInputCountry = titleCase(inputElement.value);
+    console.log("typeof->", typeof inputElement.value); // if (userInputCountry === "" || userInputCountry === " " ) {
+    //   setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
+    //   setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
+    //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
+    //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
+    //   setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
+    //   setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
+    //   setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
+    // }
 
-                        document.getElementById("user-input-button").classList.add("is-loading");
-                        userInputCountry = titleCase(inputElement.value);
-                        console.log("typeof->", _typeof(inputElement.value));
+    if (countries.includes(userInputCountry)) {
+      const userInputApiCall = await callLastFmApi(userInputCountry);
+      document.getElementById("user-input-button").classList.remove("is-warning");
+      document.getElementById("chart-content").classList.add("is-hidden");
+      document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
 
-                        if (!countries.includes(userInputCountry)) {
-                          _context5.next = 16;
-                          break;
-                        }
+      document.getElementById("user-input-button").classList.remove("is-danger");
+      document.getElementById("user-input").classList.remove("is-danger");
+      setTimeout(() => {
+        addSongDataToPage(userInputApiCall, userInputCountry);
+      }, 2001); //clear input begin
 
-                        _context5.next = 8;
-                        return callLastFmApi(userInputCountry);
+      inputElement.value = ''; //clear input end
+    }
 
-                      case 8:
-                        userInputApiCall = _context5.sent;
-                        document.getElementById("user-input-button").classList.remove("is-warning");
-                        document.getElementById("chart-content").classList.add("is-hidden");
-                        document.getElementById("add-data-points").innerHTML = ""; //clear all the things 
-
-                        document.getElementById("user-input-button").classList.remove("is-danger");
-                        document.getElementById("user-input").classList.remove("is-danger");
-                        setTimeout(function () {
-                          addSongDataToPage(userInputApiCall, userInputCountry);
-                        }, 2001); //clear input begin
-
-                        inputElement.value = ''; //clear input end
-
-                      case 16:
-                        if (userInputCountry == "" || userInputCountry == " ") {
-                          setTimeout(function () {
-                            document.getElementById("chart-content").classList.add("is-hidden");
-                          }, 1000);
-                          setTimeout(function () {
-                            document.getElementById("add-data-points").innerHTML = "";
-                          }, 1020);
-                          setTimeout(function () {
-                            document.getElementById("user-input-button").classList.remove("is-loading");
-                          }, 1020);
-                          setTimeout(function () {
-                            document.getElementById("user-input-button").classList.remove("is-danger");
-                          }, 1001);
-                          setTimeout(function () {
-                            document.getElementById("user-input-button").classList.add("is-danger");
-                          }, 1001);
-                          setTimeout(function () {
-                            document.getElementById("user-input").classList.add("is-danger");
-                          }, 1001);
-                          setTimeout(function () {
-                            inputElement.value = "Oops! You forgot to put in a country. Try again.";
-                          }, 1000);
-                        }
-
-                        if (!countries.includes(userInputCountry)) {
-                          setTimeout(function () {
-                            document.getElementById("chart-content").classList.add("is-hidden");
-                          }, 1000);
-                          setTimeout(function () {
-                            document.getElementById("add-data-points").innerHTML = "";
-                          }, 1020);
-                          setTimeout(function () {
-                            document.getElementById("user-input-button").classList.remove("is-loading");
-                          }, 1020);
-                          setTimeout(function () {
-                            document.getElementById("user-input-button").classList.remove("is-danger");
-                          }, 1001);
-                          setTimeout(function () {
-                            document.getElementById("user-input-button").classList.add("is-danger");
-                          }, 1001);
-                          setTimeout(function () {
-                            document.getElementById("user-input").classList.add("is-danger");
-                          }, 1001);
-                          setTimeout(function () {
-                            inputElement.value = "".concat(userInputCountry, " is not a valid country. Try again.");
-                          }, 1000);
-                        }
-
-                      case 18:
-                      case "end":
-                        return _context5.stop();
-                    }
-                  }
-                }, _callee5);
-              }));
-
-              return function (_x3) {
-                return _ref.apply(this, arguments);
-              };
-            }()); // end button listen functionality
-
-          case 3:
-          case "end":
-            return _context6.stop();
-        }
-      }
-    }, _callee6);
-  }));
-  return _buttonListener.apply(this, arguments);
+    if (!countries.includes(userInputCountry)) {
+      setTimeout(() => {
+        document.getElementById("chart-content").classList.add("is-hidden");
+      }, 1000);
+      setTimeout(() => {
+        document.getElementById("add-data-points").innerHTML = "";
+      }, 1020);
+      setTimeout(() => {
+        document.getElementById("user-input-button").classList.remove("is-loading");
+      }, 1020);
+      setTimeout(() => {
+        document.getElementById("user-input-button").classList.remove("is-danger");
+      }, 1001);
+      setTimeout(() => {
+        document.getElementById("user-input-button").classList.add("is-danger");
+      }, 1001);
+      setTimeout(() => {
+        document.getElementById("user-input").classList.add("is-danger");
+      }, 1001);
+      setTimeout(() => {
+        inputElement.value = "Your request is not a valid country for this data set. Try again.";
+      }, 1000);
+    }
+  }); // end button listen functionality
 }
 
 ; // end - button listener function
@@ -463,25 +291,25 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
   if (lastFMdata.error) {
     document.getElementById("user-input-button").classList.add("is-loading");
     document.getElementById("user-input-button").classList.add("is-warning");
-    setTimeout(function () {
+    setTimeout(() => {
       document.getElementById("user-input-button").classList.remove("is-loading");
     }, 1020);
-    setTimeout(function () {
+    setTimeout(() => {
       document.getElementById("user-input-button").classList.remove("is-danger");
     }, 1001);
-    setTimeout(function () {
+    setTimeout(() => {
       document.getElementById("user-input-button").classList.add("is-danger");
     }, 1001);
-    setTimeout(function () {
+    setTimeout(() => {
       document.getElementById("user-input").classList.add("is-danger");
     }, 1000);
-    setTimeout(function () {
+    setTimeout(() => {
       document.getElementById("add-data-points").innerHTML = "";
     }, 1000);
-    setTimeout(function () {
-      document.getElementById("user-input").value = "".concat(visitorCountry, " is not a valid country. Try again.");
+    setTimeout(() => {
+      document.getElementById("user-input").value = "".concat(visitorCountry, " is not a valid country for this data set. Try again.");
     }, 1000);
-    setTimeout(function () {
+    setTimeout(() => {
       document.getElementById("chart-content").classList.add("is-hidden");
     }, 999);
     return;
@@ -489,93 +317,89 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
     document.getElementById("user-input-button").classList.remove("is-loading");
     document.getElementById("user-input-button").classList.remove("is-loading");
     document.getElementById("user-input-button").classList.remove("is-warning");
-    var theadElement = document.createElement("thead"); // Create a <thead> node
+    const theadElement = document.createElement("thead"); // Create a <thead> node
 
     document.getElementById("add-data-points").appendChild(theadElement); // Append to table
 
-    var trElementWithClass = document.createElement("tr"); // Create a <tr> node
+    const trElementWithClass = document.createElement("tr"); // Create a <tr> node
 
     trElementWithClass.setAttribute("class", "is-selected"); // set class
 
     theadElement.appendChild(trElementWithClass); // Append to thead
 
-    var NumberThElement = document.createElement("th"); // Create a <thead> node
+    const NumberThElement = document.createElement("th"); // Create a <thead> node
 
-    var NumberThText = document.createTextNode("#"); // Create a tr text node
+    const NumberThText = document.createTextNode("#"); // Create a tr text node
 
     NumberThElement.appendChild(NumberThText); // Append the text
 
     trElementWithClass.appendChild(NumberThElement); // Append to thead
 
-    var ArtistThElement = document.createElement("th"); // Create a <thead> node
+    const ArtistThElement = document.createElement("th"); // Create a <thead> node
 
-    var ArtistThText = document.createTextNode("Artist"); // Create a tr text node
+    const ArtistThText = document.createTextNode("Artist"); // Create a tr text node
 
     ArtistThElement.appendChild(ArtistThText); // Append the text
 
     trElementWithClass.appendChild(ArtistThElement); // Append to thead
 
-    var SongThElement = document.createElement("th"); // Create a <thead> node
+    const SongThElement = document.createElement("th"); // Create a <thead> node
 
-    var SongThText = document.createTextNode("Song"); // Create a tr text node
+    const SongThText = document.createTextNode("Song"); // Create a tr text node
 
     SongThElement.appendChild(SongThText); // Append the text
 
     trElementWithClass.appendChild(SongThElement); // Append to thead
 
-    var ListenThElement = document.createElement("th"); // Create a <thead> node
+    const ListenThElement = document.createElement("th"); // Create a <thead> node
 
-    var ListenThText = document.createTextNode("Listen"); // Create a tr text node
+    const ListenThText = document.createTextNode("Listen"); // Create a tr text node
 
     ListenThElement.appendChild(ListenThText); // Append the text
 
     trElementWithClass.appendChild(ListenThElement); // Append to thead
 
-    var tbodyElement = document.createElement("tbody"); // Create a <tbody> node
+    const tbodyElement = document.createElement("tbody"); // Create a <tbody> node
 
     document.getElementById("add-data-points").appendChild(tbodyElement); // Append to table
 
-    var number = 0;
+    let number = 0;
 
-    for (var _i = 0, _Object$entries = Object.entries(lastFMdata.tracks.track); _i < _Object$entries.length; _i++) {
-      var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
-          key = _Object$entries$_i[0],
-          value = _Object$entries$_i[1];
-
-      var changeH2Text = document.getElementById("country-headline");
+    for (const [key, value] of Object.entries(lastFMdata.tracks.track)) {
+      const changeH2Text = document.getElementById("country-headline");
       changeH2Text.innerHTML = "Top Tracks from ".concat(visitorCountry);
-      var trElement = document.createElement("tr"); // Create a <tr> node
+      const trElement = document.createElement("tr"); // Create a <tr> node
 
       tbodyElement.appendChild(trElement); // Append to tbody
 
-      var thElement = document.createElement("th"); // Create a <th> node
+      const thElement = document.createElement("th"); // Create a <th> node
 
-      var displayNumber = Number(Object.keys(lastFMdata.tracks.track)[key]) + 1;
-      var thText = document.createTextNode(displayNumber); // Create a th text node
+      const displayNumber = Number(Object.keys(lastFMdata.tracks.track)[key]) + 1;
+      const thText = document.createTextNode(displayNumber); // Create a th text node
 
       thElement.appendChild(thText); // Append the text 
 
       trElement.appendChild(thElement); // Append to tr
 
-      var tdElement = document.createElement("td"); // Create a <td> node
+      const tdElement = document.createElement("td"); // Create a <td> node
 
-      var artistTdText = document.createTextNode(lastFMdata.tracks.track[key].artist.name); // Create a td text node
+      const artistTdText = document.createTextNode(lastFMdata.tracks.track[key].artist.name); // Create a td text node
 
       tdElement.appendChild(artistTdText); // Append the text 
 
       trElement.appendChild(tdElement); // Append to tr
 
-      var tdElement2 = document.createElement("td"); // Create a <td> 2 node
+      const tdElement2 = document.createElement("td"); // Create a <td> 2 node
 
-      var songNameTdText = document.createTextNode(lastFMdata.tracks.track[key].name); // Create a td text node
+      const songNameTdText = document.createTextNode(lastFMdata.tracks.track[key].name); // Create a td text node
 
       tdElement2.appendChild(songNameTdText); // Append the text 
 
       trElement.appendChild(tdElement2); // Append to tr
 
-      var tdElement3 = document.createElement("td"); // Create a <td> 2 node
+      const tdElement3 = document.createElement("td"); // Create a <td> 2 node
 
-      var playLinkTag = document.createElement("a"); // Create a <a> node
+      const playLinkTag = document.createElement("a"); // Create a <a> node
 
       tdElement3.appendChild(playLinkTag); // Append the text
 
@@ -583,7 +407,7 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
 
       playLinkTag.setAttribute("target", "_blank"); // URL path
 
-      var playSongText = document.createElement("img"); // Create a img
+      const playSongText = document.createElement("img"); // Create a img
 
       playSongText.setAttribute("src", "./img/play-circle.png"); // img URL path
 
@@ -632,7 +456,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55374" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65269" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

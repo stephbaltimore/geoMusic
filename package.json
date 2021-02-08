@@ -4,5 +4,10 @@
   "main": "index.js",
   "repository": "https://git.generalassemb.ly/stephbaltimore/geoMusic.git",
   "author": "stephbaltimore <stephbaltimore@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ]
 }
