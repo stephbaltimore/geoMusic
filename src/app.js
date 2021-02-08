@@ -105,6 +105,16 @@ async function buttonListener() {
       const userInputCountry = titleCase(inputElement.value)
 
       console.log("typeof->", typeof(inputElement.value))
+
+      // if (userInputCountry === "" || userInputCountry === " " ) {
+      //   setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
+      //   setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
+      //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
+      //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
+      //   setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
+      //   setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
+      //   setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
+      // }
       
       if (countries.includes(userInputCountry)) {
         
@@ -124,16 +134,6 @@ async function buttonListener() {
         //clear input end
 
       }
-
-      if (userInputCountry == "" || userInputCountry == " " ) {
-        setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
-        setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
-        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
-        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
-        setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
-        setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
-        setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
-      }
       
       if (!countries.includes(userInputCountry)) {
 
@@ -143,7 +143,7 @@ async function buttonListener() {
         setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
         setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
         setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
-        setTimeout(() => {  inputElement.value = `${userInputCountry} is not a valid country. Try again.`; }, 1000);
+        setTimeout(() => {  inputElement.value = `Your request is not a valid country for this data set. Try again.`; }, 1000);
         
         
       }
