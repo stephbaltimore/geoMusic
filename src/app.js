@@ -1,6 +1,8 @@
+// import API keys
 import { ipDataApiKey } from './keys.js';
 import { lastFmApi } from './keys.js';
 
+//import image assets
 import playButton from '/img/play-circle.png'
 
 // start - lastFM data pull
@@ -106,17 +108,16 @@ async function buttonListener() {
   
       const userInputCountry = titleCase(inputElement.value)
 
-      console.log("typeof->", typeof(inputElement.value))
-
-      // if (userInputCountry === "" || userInputCountry === " " ) {
-      //   setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
-      //   setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
-      //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
-      //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
-      //   setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
-      //   setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
-      //   setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
-      // }
+      if (userInputCountry === "" || userInputCountry === " " ) {
+        setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
+        setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
+        setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
+        setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
+        setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
+        return
+      }
       
       if (countries.includes(userInputCountry)) {
         
@@ -134,6 +135,8 @@ async function buttonListener() {
           inputElement.value = '';
           
         //clear input end
+
+        return
 
       }
       

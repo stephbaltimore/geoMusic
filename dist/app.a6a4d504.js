@@ -139,6 +139,8 @@ var _playCircle = _interopRequireDefault(require("/img/play-circle.png"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import API keys
+//import image assets
 // start - lastFM data pull
 async function callLastFmApi(country) {
   const lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
@@ -234,15 +236,31 @@ async function buttonListener() {
 
     document.getElementById("user-input-button").classList.add("is-loading");
     const userInputCountry = titleCase(inputElement.value);
-    console.log("typeof->", typeof inputElement.value); // if (userInputCountry === "" || userInputCountry === " " ) {
-    //   setTimeout(() => {  document.getElementById("chart-content").classList.add("is-hidden"); }, 1000);
-    //   setTimeout(() => {  document.getElementById("add-data-points").innerHTML = ""; }, 1020);
-    //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-loading"); }, 1020);
-    //   setTimeout(() => {  document.getElementById("user-input-button").classList.remove("is-danger"); }, 1001);
-    //   setTimeout(() => {  document.getElementById("user-input-button").classList.add("is-danger"); }, 1001);
-    //   setTimeout(() => {  document.getElementById("user-input").classList.add("is-danger"); }, 1001);
-    //   setTimeout(() => {  inputElement.value = `Oops! You forgot to put in a country. Try again.`; }, 1000);
-    // }
+
+    if (userInputCountry === "" || userInputCountry === " ") {
+      setTimeout(() => {
+        document.getElementById("chart-content").classList.add("is-hidden");
+      }, 1000);
+      setTimeout(() => {
+        document.getElementById("add-data-points").innerHTML = "";
+      }, 1020);
+      setTimeout(() => {
+        document.getElementById("user-input-button").classList.remove("is-loading");
+      }, 1020);
+      setTimeout(() => {
+        document.getElementById("user-input-button").classList.remove("is-danger");
+      }, 1001);
+      setTimeout(() => {
+        document.getElementById("user-input-button").classList.add("is-danger");
+      }, 1001);
+      setTimeout(() => {
+        document.getElementById("user-input").classList.add("is-danger");
+      }, 1001);
+      setTimeout(() => {
+        inputElement.value = "Oops! You forgot to put in a country. Try again.";
+      }, 1000);
+      return;
+    }
 
     if (countries.includes(userInputCountry)) {
       const userInputApiCall = await callLastFmApi(userInputCountry);
@@ -257,6 +275,8 @@ async function buttonListener() {
       }, 2001); //clear input begin
 
       inputElement.value = ''; //clear input end
+
+      return;
     }
 
     if (!countries.includes(userInputCountry)) {
@@ -459,7 +479,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50102" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50840" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
