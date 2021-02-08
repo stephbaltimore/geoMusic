@@ -126,10 +126,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.lastFmApi = exports.ipDataApiKey = void 0;
 const ipDataApiKey = "2090cf5a3ded3065453a13bd9d5b0f76596478c4dbf6d65778066237";
 exports.ipDataApiKey = ipDataApiKey;
-const lastFmApi = "f8e8a6e68bea1975052794d9397bd69d"; // // attemping environment process
-// export const ipDataApiKey = process.env.IP_DATA_API;
-// export const lastFmApi = process.env.LAST_FM_API;
-
+const lastFmApi = "f8e8a6e68bea1975052794d9397bd69d";
 exports.lastFmApi = lastFmApi;
 },{}],"src/app.js":[function(require,module,exports) {
 "use strict";
@@ -456,7 +453,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65269" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56540" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
