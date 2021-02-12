@@ -5,6 +5,54 @@ import { lastFmApi } from './keys.js';
 //import image assets
 import playButton from '/img/play-circle.png'
 
+//firebase
+import firebase from "firebase/app";
+import 'firebase/firestore';
+
+import { firebaseKeys } from './keys';
+
+firebase.initializeApp(firebaseKeys);
+
+const db = firebase.firestore();
+
+const city_data = {
+  updateVisits: (id, amount) => {
+
+    console.log("what the->", db.collection("city_data").doc(id))
+
+    return db.collection("city_data").doc(id).update({
+      visitor_count: firebase.firestore.FieldValue.increment(amount)
+    });
+  },
+  delete: (id) => {
+    return db.collection("city_data").doc(id).delete();
+  },
+  create: (city_data) => {
+    return db.collection("city_data").add({
+      city,
+      country_name,
+      region,
+      visitor_count: 1
+    });
+  },
+  getAll: () => {
+    return db.collection('city_data').get().then((snapshot) => {
+        console.log("type of snapshot", typeof(snapshot))
+      return snapshot.docs.map(doc => {
+        return {
+          id: doc.value,
+          ...doc.data()
+        };
+      });
+    });
+  }
+};
+
+
+
+//detect user location and information
+
+
 // start - lastFM data pull
 
 async function callLastFmApi(country) {
@@ -40,6 +88,20 @@ const lastFMParams = {
 
 // end - lastFM data pull
 
+// start - promise to handle detecting user's location
+async function json(url) {
+  return fetch(url).then(res => res.json());
+}
+async function detectVisitorInformation() {
+  const detectIP = json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
+  const visitorInformation = data;
+  // end - promise to handle detecting user's location   
+  return visitorInformation
+  });
+  return detectIP
+  } 
+
+
 // title case user input
 function titleCase(str) {
   str = str.toLowerCase().split(' ');
@@ -52,37 +114,83 @@ function titleCase(str) {
 
 // start - code runs on page load
 async function onLoadHandler() {
-
-  // start - promise to handle detecting user's location
-  async function json(url) {
-    return fetch(url).then(res => res.json());
-  }
   
-  async function detectVisitorCountry() {
-  const detectIP = json(`https://api.ipdata.co?api-key=${ipDataApiKey}`).then(data => {
-  const visitorCountry = data.country_name;
-  console.log("user country->", visitorCountry)
-  console.log("what you can do with user data", data)
-  // end - promise to handle detecting user's location
-  return visitorCountry
-  });
-  return detectIP
-  } 
-
-  const visitorCountry = await detectVisitorCountry();
-
+  city_data;
+  
+  const visitorCountry = await detectVisitorInformation();
   //call lastFM API with the data
-  const lastFMdata = await callLastFmApi(visitorCountry);
+  const lastFMdata = await callLastFmApi(visitorCountry.country_name);
 
-  document.getElementById("onLoad").classList.remove("is-hidden");
+  //start - capture location and store in firebase
+  
+  
+    // create new
 
-  setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry); }, 2001);
-  setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
-  setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+    const friendlyCityName = `${visitorCountry.city}, ${visitorCountry.region}`
 
-  buttonListener();
+    const readAll = async () => {
+      const data = await db.collection('city_data').get();
+    
+      const formattedData = data.docs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data()
+        };
+      });
+    
+      console.log('READ ALL', formattedData);
+      return formattedData;
+    };
 
+    const firebaseData = await readAll();
+
+    console.log("firebaseData is...",typeof(firebaseData));
+
+    for (const [key, value] of Object.entries(firebaseData)) {
+
+    if (visitorCountry.city === firebaseData[key].city) {
+      console.log("your city is in the data");
+      const updateVisits = (id, number) => {
+        return db.collection("city_data").doc(id).update({
+          visitor_count: firebase.firestore.FieldValue.increment(number)
+        });
+      };
+      updateVisits(friendlyCityName, 1);
+      document.getElementById("onLoad").classList.remove("is-hidden");
+
+      setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
+      setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
+      setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+
+      buttonListener();
+      return
+    }
+    else {
+      console.log("your city is NOT in the data");
+      const visitorData = {
+        city: visitorCountry.city,
+        region: visitorCountry.region,
+        country_name: visitorCountry.country_name,
+        visitor_count: 1
+      };
+
+
+      db.collection('city_data').doc(friendlyCityName).set(visitorData);
+      document.getElementById("onLoad").classList.remove("is-hidden");
+
+      setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
+      setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
+      setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+
+      buttonListener();
+      return
+    }
+
+  };
+//end - capture location and store in firebase
 };
+
+
 // end - code runs on page load
 
 // button listener for user input
@@ -164,8 +272,6 @@ async function buttonListener() {
 // start - chart styling
 
 function addSongDataToPage(lastFMdata, visitorCountry) {
-
-  console.log("what is happening with data here->", lastFMdata)
 
   if (lastFMdata.error) {
       document.getElementById("user-input-button").classList.add("is-loading");
@@ -263,10 +369,8 @@ document.getElementById("chart-content").classList.remove('is-hidden');
 // // end chart styling
 
 
-
-
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', onLoadHandler);
 } else {
-  onLoadHandler();
+  onLoadHandler();  
 }
