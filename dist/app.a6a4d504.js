@@ -29166,8 +29166,21 @@ const city_data = {
       });
     });
   }
-}; //detect user location and information
+};
+
+const readAll = async () => {
+  const data = await db.collection('city_data').get();
+  const formattedData = data.docs.map(doc => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    };
+  });
+  console.log('READ ALL', formattedData);
+  return formattedData;
+}; //end firebase
 // start - lastFM data pull
+
 
 async function callLastFmApi(country) {
   const lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
@@ -29227,31 +29240,18 @@ function titleCase(str) {
 
 
 async function onLoadHandler() {
-  city_data;
   const visitorCountry = await detectVisitorInformation(); //call lastFM API with the data
 
   const lastFMdata = await callLastFmApi(visitorCountry.country_name); //start - capture location and store in firebase
   // create new
 
   const friendlyCityName = "".concat(visitorCountry.city, ", ").concat(visitorCountry.region);
-
-  const readAll = async () => {
-    const data = await db.collection('city_data').get();
-    const formattedData = data.docs.map(doc => {
-      return {
-        id: doc.id,
-        ...doc.data()
-      };
-    });
-    console.log('READ ALL', formattedData);
-    return formattedData;
-  };
-
+  console.log(friendlyCityName);
   const firebaseData = await readAll();
   console.log("firebaseData is...", typeof firebaseData);
 
   for (const [key, value] of Object.entries(firebaseData)) {
-    if (visitorCountry.city === firebaseData[key].city) {
+    if (visitorCountry.city == firebaseData[key].city && visitorCountry.region == firebaseData[key].region) {
       console.log("your city is in the data");
 
       const updateVisits = (id, number) => {
@@ -29559,7 +29559,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64135" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55261" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

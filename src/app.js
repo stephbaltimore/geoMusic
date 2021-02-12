@@ -48,9 +48,22 @@ const city_data = {
   }
 };
 
+const readAll = async () => {
+  const data = await db.collection('city_data').get();
+
+  const formattedData = data.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    };
+  });
+
+  console.log('READ ALL', formattedData);
+  return formattedData;
+};
 
 
-//detect user location and information
+//end firebase
 
 
 // start - lastFM data pull
@@ -115,8 +128,6 @@ function titleCase(str) {
 // start - code runs on page load
 async function onLoadHandler() {
   
-  city_data;
-  
   const visitorCountry = await detectVisitorInformation();
   //call lastFM API with the data
   const lastFMdata = await callLastFmApi(visitorCountry.country_name);
@@ -127,28 +138,14 @@ async function onLoadHandler() {
     // create new
 
     const friendlyCityName = `${visitorCountry.city}, ${visitorCountry.region}`
-
-    const readAll = async () => {
-      const data = await db.collection('city_data').get();
-    
-      const formattedData = data.docs.map((doc) => {
-        return {
-          id: doc.id,
-          ...doc.data()
-        };
-      });
-    
-      console.log('READ ALL', formattedData);
-      return formattedData;
-    };
-
+    console.log(friendlyCityName);
     const firebaseData = await readAll();
 
     console.log("firebaseData is...",typeof(firebaseData));
 
     for (const [key, value] of Object.entries(firebaseData)) {
 
-    if (visitorCountry.city === firebaseData[key].city) {
+    if (visitorCountry.city == firebaseData[key].city && visitorCountry.region == firebaseData[key].region) {
       console.log("your city is in the data");
       const updateVisits = (id, number) => {
         return db.collection("city_data").doc(id).update({
