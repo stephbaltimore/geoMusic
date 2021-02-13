@@ -1,6 +1,6 @@
 // import API keys
-import { ipDataApiKey } from './src/keys.js';
-import { lastFmApi } from './src/keys.js';
+import { ipDataApiKey } from './keys.js';
+import { lastFmApi } from './keys.js';
 
 //import image assets
 import playButton from '/img/play-circle.png'
@@ -9,7 +9,7 @@ import playButton from '/img/play-circle.png'
 import firebase from "firebase/app";
 import 'firebase/firestore';
 
-import { firebaseKeys } from './src/keys';
+import { firebaseKeys } from './keys';
 
 firebase.initializeApp(firebaseKeys);
 
