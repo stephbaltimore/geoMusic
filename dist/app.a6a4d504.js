@@ -29178,9 +29178,39 @@ const readAll = async () => {
   });
   console.log('READ ALL', formattedData);
   return formattedData;
-}; //end firebase
-// start - lastFM data pull
+};
 
+async function displayCityData() {
+  return db.collection("city_data").orderBy("visitor_count", "desc").get().then(snapshot => {
+    console.log("type of snapshot", typeof snapshot);
+    return snapshot.docs.map(doc => {
+      return {
+        id: doc.value,
+        ...doc.data()
+      };
+    });
+  });
+}
+
+;
+
+async function makeCityDataPretty() {
+  const addTheDataToPage = await displayCityData();
+  console.log("what does this look like->", addTheDataToPage);
+
+  for (const key of Object.keys(addTheDataToPage)) {
+    const LiThElement = document.createElement("li"); // Create a <li> node
+
+    const LiThText = document.createTextNode("".concat(addTheDataToPage[key].city, ", ").concat(addTheDataToPage[key].region, " - ").concat(addTheDataToPage[key].visitor_count, " visits")); // Create a li text node
+
+    LiThElement.appendChild(LiThText); // Append the text
+
+    document.getElementById("top-cities").appendChild(LiThElement); // Append to thead
+  }
+}
+
+; //end firebase
+// start - lastFM data pull
 
 async function callLastFmApi(country) {
   const lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
@@ -29242,13 +29272,13 @@ function titleCase(str) {
 async function onLoadHandler() {
   const visitorCountry = await detectVisitorInformation(); //call lastFM API with the data
 
-  const lastFMdata = await callLastFmApi(visitorCountry.country_name); //start - capture location and store in firebase
+  const lastFMdata = await callLastFmApi(visitorCountry.country_name);
+  makeCityDataPretty(); //start - capture location and store in firebase
   // create new
 
   const friendlyCityName = "".concat(visitorCountry.city, ", ").concat(visitorCountry.region);
   console.log(friendlyCityName);
   const firebaseData = await readAll();
-  console.log("firebaseData is...", typeof firebaseData);
 
   for (const [key, value] of Object.entries(firebaseData)) {
     if (visitorCountry.city == firebaseData[key].city && visitorCountry.region == firebaseData[key].region) {
@@ -29466,8 +29496,6 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
 
     document.getElementById("add-data-points").appendChild(tbodyElement); // Append to table
 
-    let number = 0;
-
     for (const [key, value] of Object.entries(lastFMdata.tracks.track)) {
       const changeH2Text = document.getElementById("country-headline");
       changeH2Text.innerHTML = "Top Tracks from ".concat(visitorCountry);
@@ -29559,7 +29587,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49616" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57691" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
