@@ -2,7 +2,10 @@
   "name": "project",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://git.generalassemb.ly/stephbaltimore/geoMusic.git",
+  "repository": {
+    "type": "git",
+    "url": "https://git.generalassemb.ly/stephbaltimore/geoMusic.git"
+  },
   "author": "stephbaltimore <stephbaltimore@gmail.com>",
   "license": "MIT",
   "browserslist": [
@@ -15,7 +18,10 @@
     "firebase": "^8.2.7"
   },
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
 }
