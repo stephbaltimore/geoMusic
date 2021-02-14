@@ -173,33 +173,31 @@ async function onLoadHandler() {
 
     for (const [key, value] of Object.entries(firebaseData)) {
 
-      console.log(`${firebaseData[key].city}, ${firebaseData[key].region}`)
-
-    if ( `${firebaseData[key].city}, ${firebaseData[key].region}` === `${visitorCountry.city}, ${visitorCountry.region}`) {
-      console.log("your city is in the data");
-      const updateVisits = (id, number) => {
-        return db.collection("city_data").doc(id).update({
-          visitor_count: firebase.firestore.FieldValue.increment(number)
-        });
-      };
-      updateVisits(friendlyCityName, 1);
-
-      document.getElementById("onLoad").classList.remove("is-hidden");
-      setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
-      setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
-      setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
-
-      buttonListener();
-      return
-    }
-    else {
-      console.log("your city is NOT in the data");
-      const visitorData = {
-        city: visitorCountry.city,
-        region: visitorCountry.region,
-        country_name: visitorCountry.country_name,
-        visitor_count: 1
-      };
+      if (visitorCountry.city === firebaseData[key].city && visitorCountry.region === firebaseData[key].region) {
+        console.log("your city is in the data");
+        const updateVisits = (id, number) => {
+          return db.collection("city_data").doc(id).update({
+            visitor_count: firebase.firestore.FieldValue.increment(number)
+          });
+        };
+        updateVisits(friendlyCityName, 1);
+  
+        document.getElementById("onLoad").classList.remove("is-hidden");
+        setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
+        setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
+        setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+  
+        buttonListener();
+        return
+      }
+      else {
+        console.log("your city is NOT in the data");
+        const visitorData = {
+          city: visitorCountry.city,
+          region: visitorCountry.region,
+          country_name: visitorCountry.country_name,
+          visitor_count: 1
+        };
 
 
       db.collection('city_data').doc(friendlyCityName).set(visitorData);
