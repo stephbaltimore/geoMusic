@@ -29273,6 +29273,7 @@ async function onLoadHandler() {
   const visitorCountry = await detectVisitorInformation(); //call lastFM API with the data
 
   const lastFMdata = await callLastFmApi(visitorCountry.country_name);
+  console.log("visitor info->", visitorCountry);
   makeCityDataPretty(); //start - capture location and store in firebase
   // create new
 
@@ -29587,7 +29588,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55763" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64786" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

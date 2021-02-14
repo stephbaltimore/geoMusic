@@ -159,6 +159,8 @@ async function onLoadHandler() {
   //call lastFM API with the data
   const lastFMdata = await callLastFmApi(visitorCountry.country_name);
 
+  console.log("visitor info->", visitorCountry);
+
   makeCityDataPretty();
   //start - capture location and store in firebase
   
