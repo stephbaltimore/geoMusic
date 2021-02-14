@@ -29213,7 +29213,7 @@ async function makeCityDataPretty() {
 // start - lastFM data pull
 
 async function callLastFmApi(country) {
-  const lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
+  const lastFMUrl = new URL('https://ws.audioscrobbler.com/2.0/');
   const lastFMParams = {
     'method': 'geo.gettoptracks',
     'country': country,
@@ -29588,7 +29588,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51586" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52214" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

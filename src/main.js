@@ -97,7 +97,7 @@ async function makeCityDataPretty() {
 
 async function callLastFmApi(country) {
 
-const lastFMUrl = new URL('http://ws.audioscrobbler.com/2.0/');
+const lastFMUrl = new URL('https://ws.audioscrobbler.com/2.0/');
 const lastFMParams = {
     'method': 'geo.gettoptracks',
     'country': country,
