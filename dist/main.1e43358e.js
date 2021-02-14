@@ -29282,7 +29282,9 @@ async function onLoadHandler() {
   const firebaseData = await readAll();
 
   for (const [key, value] of Object.entries(firebaseData)) {
-    if (visitorCountry.city == firebaseData[key].city && visitorCountry.region == firebaseData[key].region) {
+    console.log("".concat(firebaseData[key].city, ", ").concat(firebaseData[key].region));
+
+    if ("".concat(firebaseData[key].city, ", ").concat(firebaseData[key].region) === "".concat(visitorCountry.city, ", ").concat(visitorCountry.region)) {
       console.log("your city is in the data");
 
       const updateVisits = (id, number) => {
@@ -29588,7 +29590,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52214" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49484" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -173,7 +173,9 @@ async function onLoadHandler() {
 
     for (const [key, value] of Object.entries(firebaseData)) {
 
-    if (visitorCountry.city == firebaseData[key].city && visitorCountry.region == firebaseData[key].region) {
+      console.log(`${firebaseData[key].city}, ${firebaseData[key].region}`)
+
+    if ( `${firebaseData[key].city}, ${firebaseData[key].region}` === `${visitorCountry.city}, ${visitorCountry.region}`) {
       console.log("your city is in the data");
       const updateVisits = (id, number) => {
         return db.collection("city_data").doc(id).update({
