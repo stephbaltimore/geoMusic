@@ -171,9 +171,17 @@ async function onLoadHandler() {
     console.log(friendlyCityName);
     const firebaseData = await readAll();
 
-    for (const [key, value] of Object.entries(firebaseData)) {
+    //1 is this visitor in the data
 
-      if (visitorCountry.city === firebaseData[key].city && visitorCountry.region === firebaseData[key].region) {
+    console.log("look at this-->", firebaseData);
+    console.log("what is firebaseData", Array.isArray(firebaseData));
+
+    const doesVisitorCityExist = firebaseData.find((firebaseItem) => { return firebaseItem.id === friendlyCityName })
+
+    console.log("doesVisitorCityExist", doesVisitorCityExist)
+
+
+      if (doesVisitorCityExist) {
         console.log("your city is in the data");
         const updateVisits = (id, number) => {
           return db.collection("city_data").doc(id).update({
@@ -208,14 +216,13 @@ async function onLoadHandler() {
       setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
 
       buttonListener();
-      return
+      return  
     }
-
-  };
 //end - capture location and store in firebase
 
   
 };
+
 
 
 // end - code runs on page load

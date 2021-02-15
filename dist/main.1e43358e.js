@@ -29279,56 +29279,60 @@ async function onLoadHandler() {
 
   const friendlyCityName = "".concat(visitorCountry.city, ", ").concat(visitorCountry.region);
   console.log(friendlyCityName);
-  const firebaseData = await readAll();
+  const firebaseData = await readAll(); //1 is this visitor in the data
 
-  for (const [key, value] of Object.entries(firebaseData)) {
-    if (visitorCountry.city === firebaseData[key].city && visitorCountry.region === firebaseData[key].region) {
-      console.log("your city is in the data");
+  console.log("look at this-->", firebaseData);
+  console.log("what is firebaseData", Array.isArray(firebaseData));
+  const doesVisitorCityExist = firebaseData.find(firebaseItem => {
+    return firebaseItem.id === friendlyCityName;
+  });
+  console.log("doesVisitorCityExist", doesVisitorCityExist);
 
-      const updateVisits = (id, number) => {
-        return db.collection("city_data").doc(id).update({
-          visitor_count: _app.default.firestore.FieldValue.increment(number)
-        });
-      };
+  if (doesVisitorCityExist) {
+    console.log("your city is in the data");
 
-      updateVisits(friendlyCityName, 1);
-      document.getElementById("onLoad").classList.remove("is-hidden");
-      setTimeout(() => {
-        addSongDataToPage(lastFMdata, visitorCountry.country_name);
-      }, 2001);
-      setTimeout(() => {
-        document.getElementById("onLoad").classList.add("is-hidden");
-      }, 2000);
-      setTimeout(() => {
-        document.getElementById("chart-content").classList.remove("is-hidden");
-      }, 2000);
-      buttonListener();
-      return;
-    } else {
-      console.log("your city is NOT in the data");
-      const visitorData = {
-        city: visitorCountry.city,
-        region: visitorCountry.region,
-        country_name: visitorCountry.country_name,
-        visitor_count: 1
-      };
-      db.collection('city_data').doc(friendlyCityName).set(visitorData);
-      document.getElementById("onLoad").classList.remove("is-hidden");
-      setTimeout(() => {
-        addSongDataToPage(lastFMdata, visitorCountry.country_name);
-      }, 2001);
-      setTimeout(() => {
-        document.getElementById("onLoad").classList.add("is-hidden");
-      }, 2000);
-      setTimeout(() => {
-        document.getElementById("chart-content").classList.remove("is-hidden");
-      }, 2000);
-      buttonListener();
-      return;
-    }
-  }
+    const updateVisits = (id, number) => {
+      return db.collection("city_data").doc(id).update({
+        visitor_count: _app.default.firestore.FieldValue.increment(number)
+      });
+    };
 
-  ; //end - capture location and store in firebase
+    updateVisits(friendlyCityName, 1);
+    document.getElementById("onLoad").classList.remove("is-hidden");
+    setTimeout(() => {
+      addSongDataToPage(lastFMdata, visitorCountry.country_name);
+    }, 2001);
+    setTimeout(() => {
+      document.getElementById("onLoad").classList.add("is-hidden");
+    }, 2000);
+    setTimeout(() => {
+      document.getElementById("chart-content").classList.remove("is-hidden");
+    }, 2000);
+    buttonListener();
+    return;
+  } else {
+    console.log("your city is NOT in the data");
+    const visitorData = {
+      city: visitorCountry.city,
+      region: visitorCountry.region,
+      country_name: visitorCountry.country_name,
+      visitor_count: 1
+    };
+    db.collection('city_data').doc(friendlyCityName).set(visitorData);
+    document.getElementById("onLoad").classList.remove("is-hidden");
+    setTimeout(() => {
+      addSongDataToPage(lastFMdata, visitorCountry.country_name);
+    }, 2001);
+    setTimeout(() => {
+      document.getElementById("onLoad").classList.add("is-hidden");
+    }, 2000);
+    setTimeout(() => {
+      document.getElementById("chart-content").classList.remove("is-hidden");
+    }, 2000);
+    buttonListener();
+    return;
+  } //end - capture location and store in firebase
+
 }
 
 ; // end - code runs on page load
@@ -29588,7 +29592,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57893" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60799" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
