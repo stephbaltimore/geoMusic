@@ -29298,6 +29298,17 @@ async function onLoadHandler() {
     };
 
     updateVisits(friendlyCityName, 1);
+    document.getElementById("onLoad").classList.remove("is-hidden");
+    setTimeout(() => {
+      addSongDataToPage(lastFMdata, visitorCountry.country_name);
+    }, 2001);
+    setTimeout(() => {
+      document.getElementById("onLoad").classList.add("is-hidden");
+    }, 2000);
+    setTimeout(() => {
+      document.getElementById("chart-content").classList.remove("is-hidden");
+    }, 2000);
+    return;
   }
 
   if (doesVisitorCityExist === undefined) {
@@ -29587,7 +29598,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51069" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52842" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

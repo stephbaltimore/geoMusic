@@ -190,12 +190,19 @@ async function onLoadHandler() {
           });
         };
         updateVisits(friendlyCityName, 1);
+
+        document.getElementById("onLoad").classList.remove("is-hidden");
+        setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
+        setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
+        setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+        return
   
       }
 
       if (doesVisitorCityExist === undefined) {
         console.log("you don't have a city defined");
       }
+      
       else {
         console.log("your city is NOT in the data");
         const visitorData = {
@@ -208,14 +215,14 @@ async function onLoadHandler() {
           db.collection('city_data').doc(friendlyCityName).set(visitorData);
           document.getElementById("onLoad").classList.remove("is-hidden");
 
-    }
+      }
 //end - capture location and store in firebase
 //load the page with music data
+
 document.getElementById("onLoad").classList.remove("is-hidden");
 setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
 setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
 setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
-
 buttonListener();
   
 };
