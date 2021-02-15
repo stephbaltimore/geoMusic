@@ -29289,7 +29289,7 @@ async function onLoadHandler() {
   console.log("doesVisitorCityExist", doesVisitorCityExist);
 
   if (doesVisitorCityExist) {
-    console.log("your city is in the data");
+    console.log("your city is in the data"); //update visits number
 
     const updateVisits = (id, number) => {
       return db.collection("city_data").doc(id).update({
@@ -29298,18 +29298,10 @@ async function onLoadHandler() {
     };
 
     updateVisits(friendlyCityName, 1);
-    document.getElementById("onLoad").classList.remove("is-hidden");
-    setTimeout(() => {
-      addSongDataToPage(lastFMdata, visitorCountry.country_name);
-    }, 2001);
-    setTimeout(() => {
-      document.getElementById("onLoad").classList.add("is-hidden");
-    }, 2000);
-    setTimeout(() => {
-      document.getElementById("chart-content").classList.remove("is-hidden");
-    }, 2000);
-    buttonListener();
-    return;
+  }
+
+  if (doesVisitorCityExist === undefined) {
+    console.log("you don't have a city defined");
   } else {
     console.log("your city is NOT in the data");
     const visitorData = {
@@ -29317,22 +29309,25 @@ async function onLoadHandler() {
       region: visitorCountry.region,
       country_name: visitorCountry.country_name,
       visitor_count: 1
-    };
+    }; //add new city to database
+
     db.collection('city_data').doc(friendlyCityName).set(visitorData);
     document.getElementById("onLoad").classList.remove("is-hidden");
-    setTimeout(() => {
-      addSongDataToPage(lastFMdata, visitorCountry.country_name);
-    }, 2001);
-    setTimeout(() => {
-      document.getElementById("onLoad").classList.add("is-hidden");
-    }, 2000);
-    setTimeout(() => {
-      document.getElementById("chart-content").classList.remove("is-hidden");
-    }, 2000);
-    buttonListener();
-    return;
   } //end - capture location and store in firebase
+  //load the page with music data
 
+
+  document.getElementById("onLoad").classList.remove("is-hidden");
+  setTimeout(() => {
+    addSongDataToPage(lastFMdata, visitorCountry.country_name);
+  }, 2001);
+  setTimeout(() => {
+    document.getElementById("onLoad").classList.add("is-hidden");
+  }, 2000);
+  setTimeout(() => {
+    document.getElementById("chart-content").classList.remove("is-hidden");
+  }, 2000);
+  buttonListener();
 }
 
 ; // end - code runs on page load
@@ -29592,7 +29587,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60799" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51069" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
