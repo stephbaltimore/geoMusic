@@ -199,7 +199,7 @@ async function onLoadHandler() {
   
       }
 
-      if (doesVisitorCityExist === undefined) {
+      if (friendlyCityName === "null, null") {
         console.log("you don't have a city defined");
       }
       

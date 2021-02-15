@@ -29311,7 +29311,7 @@ async function onLoadHandler() {
     return;
   }
 
-  if (doesVisitorCityExist === undefined) {
+  if (friendlyCityName === "null, null") {
     console.log("you don't have a city defined");
   } else {
     console.log("your city is NOT in the data");
@@ -29598,7 +29598,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52842" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55779" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
