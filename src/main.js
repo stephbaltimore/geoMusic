@@ -195,6 +195,7 @@ async function onLoadHandler() {
         setTimeout(() => {  addSongDataToPage(lastFMdata, visitorCountry.country_name); }, 2001);
         setTimeout(() => {  document.getElementById("onLoad").classList.add("is-hidden"); }, 2000);
         setTimeout(() => {  document.getElementById("chart-content").classList.remove("is-hidden"); }, 2000);
+        buttonListener();
         return
   
       }

@@ -29308,6 +29308,7 @@ async function onLoadHandler() {
     setTimeout(() => {
       document.getElementById("chart-content").classList.remove("is-hidden");
     }, 2000);
+    buttonListener();
     return;
   }
 
@@ -29598,7 +29599,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55779" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60996" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
