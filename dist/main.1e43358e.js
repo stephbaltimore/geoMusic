@@ -29139,7 +29139,6 @@ const db = _app.default.firestore();
 
 const city_data = {
   updateVisits: (id, amount) => {
-    console.log("what the->", db.collection("city_data").doc(id));
     return db.collection("city_data").doc(id).update({
       visitor_count: _app.default.firestore.FieldValue.increment(amount)
     });
@@ -29157,7 +29156,6 @@ const city_data = {
   },
   getAll: () => {
     return db.collection('city_data').get().then(snapshot => {
-      console.log("type of snapshot", typeof snapshot);
       return snapshot.docs.map(doc => {
         return {
           id: doc.value,
@@ -29176,13 +29174,11 @@ const readAll = async () => {
       ...doc.data()
     };
   });
-  console.log('READ ALL', formattedData);
   return formattedData;
 };
 
 async function displayCityData() {
   return db.collection("city_data").orderBy("visitor_count", "desc").get().then(snapshot => {
-    console.log("type of snapshot", typeof snapshot);
     return snapshot.docs.map(doc => {
       return {
         id: doc.value,
@@ -29196,7 +29192,6 @@ async function displayCityData() {
 
 async function makeCityDataPretty() {
   const addTheDataToPage = await displayCityData();
-  console.log("what does this look like->", addTheDataToPage);
 
   for (const key of Object.keys(addTheDataToPage)) {
     const LiThElement = document.createElement("li"); // Create a <li> node
@@ -29236,7 +29231,6 @@ async function callLastFmApi(country) {
     console.log('Success for ', lastFMUrl);
   }
 
-  console.log("data here->", json);
   return json;
 }
 
@@ -29266,27 +29260,50 @@ function titleCase(str) {
 
   return str.join(' ');
 } // end - title case user input
+// sleep
+
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+} // sleep
+//success funciton
+
+
+async function successMusicChart(data, country) {
+  document.getElementById("onLoad").classList.remove("is-hidden");
+  await sleep(3000);
+  addSongDataToPage(data, country);
+  document.getElementById("chart-content").classList.remove;
+  document.getElementById("onLoad").classList.add("is-hidden");
+} // end success function
+//start failed search
+
+
+async function failedSearchLoading() {
+  document.getElementById("chart-content").classList.add("is-hidden");
+  document.getElementById("user-input-button").classList.add("is-danger");
+  document.getElementById("add-data-points").innerHTML = "";
+  document.getElementById("user-input").classList.add("is-danger");
+  await sleep(2000);
+  document.getElementById("user-input-button").classList.remove("is-danger");
+  document.getElementById("user-input-button").classList.remove("is-loading");
+} //end failed search
 // start - code runs on page load
 
 
 async function onLoadHandler() {
+  makeCityDataPretty();
   const visitorCountry = await detectVisitorInformation(); //call lastFM API with the data
 
-  const lastFMdata = await callLastFmApi(visitorCountry.country_name);
-  console.log("visitor info->", visitorCountry);
-  makeCityDataPretty(); //start - capture location and store in firebase
+  const lastFMdata = await callLastFmApi(visitorCountry.country_name); //start - capture location and store in firebase
   // create new
 
   const friendlyCityName = "".concat(visitorCountry.city, ", ").concat(visitorCountry.region);
-  console.log(friendlyCityName);
   const firebaseData = await readAll(); //1 is this visitor in the data
 
-  console.log("look at this-->", firebaseData);
-  console.log("what is firebaseData", Array.isArray(firebaseData));
   const doesVisitorCityExist = firebaseData.find(firebaseItem => {
     return firebaseItem.id === friendlyCityName;
   });
-  console.log("doesVisitorCityExist", doesVisitorCityExist);
 
   if (doesVisitorCityExist) {
     console.log("your city is in the data"); //update visits number
@@ -29298,22 +29315,18 @@ async function onLoadHandler() {
     };
 
     updateVisits(friendlyCityName, 1);
-    document.getElementById("onLoad").classList.remove("is-hidden");
-    setTimeout(() => {
-      addSongDataToPage(lastFMdata, visitorCountry.country_name);
-    }, 2001);
-    setTimeout(() => {
-      document.getElementById("onLoad").classList.add("is-hidden");
-    }, 2000);
-    setTimeout(() => {
-      document.getElementById("chart-content").classList.remove("is-hidden");
-    }, 2000);
+    await successMusicChart(lastFMdata, visitorCountry.country_name);
     buttonListener();
+    makeCityDataPretty();
     return;
   }
 
   if (friendlyCityName === "null, null") {
     console.log("you don't have a city defined");
+    await successMusicChart(lastFMdata, visitorCountry.country_name);
+    makeCityDataPretty();
+    buttonListener();
+    return;
   } else {
     console.log("your city is NOT in the data");
     const visitorData = {
@@ -29325,21 +29338,13 @@ async function onLoadHandler() {
 
     db.collection('city_data').doc(friendlyCityName).set(visitorData);
     document.getElementById("onLoad").classList.remove("is-hidden");
+    await successMusicChart(lastFMdata, visitorCountry.country_name);
+    makeCityDataPretty();
+    buttonListener();
+    return;
   } //end - capture location and store in firebase
   //load the page with music data
 
-
-  document.getElementById("onLoad").classList.remove("is-hidden");
-  setTimeout(() => {
-    addSongDataToPage(lastFMdata, visitorCountry.country_name);
-  }, 2001);
-  setTimeout(() => {
-    document.getElementById("onLoad").classList.add("is-hidden");
-  }, 2000);
-  setTimeout(() => {
-    document.getElementById("chart-content").classList.remove("is-hidden");
-  }, 2000);
-  buttonListener();
 }
 
 ; // end - code runs on page load
@@ -29352,37 +29357,18 @@ async function buttonListener() {
 
   const btn = document.getElementById('user-input-button');
   btn.addEventListener('click', async function (event) {
-    event.preventDefault(); // console.log('click');
-    //grabs user input - begin
+    event.preventDefault(); //grabs user input - begin
 
     const inputElement = document.getElementById('user-input'); //grabs user input - end
     //button click listener + action end
 
     document.getElementById("user-input-button").classList.add("is-loading");
+    await sleep(1000);
     const userInputCountry = titleCase(inputElement.value);
 
     if (userInputCountry === "" || userInputCountry === " ") {
-      setTimeout(() => {
-        document.getElementById("chart-content").classList.add("is-hidden");
-      }, 1000);
-      setTimeout(() => {
-        document.getElementById("add-data-points").innerHTML = "";
-      }, 1020);
-      setTimeout(() => {
-        document.getElementById("user-input-button").classList.remove("is-loading");
-      }, 1020);
-      setTimeout(() => {
-        document.getElementById("user-input-button").classList.remove("is-danger");
-      }, 1001);
-      setTimeout(() => {
-        document.getElementById("user-input-button").classList.add("is-danger");
-      }, 1001);
-      setTimeout(() => {
-        document.getElementById("user-input").classList.add("is-danger");
-      }, 1001);
-      setTimeout(() => {
-        inputElement.value = "Oops! You forgot to put in a country. Try again.";
-      }, 1000);
+      await failedSearchLoading();
+      inputElement.value = "Oops! You forgot to put in a country. Try again.";
       return;
     }
 
@@ -29394,9 +29380,8 @@ async function buttonListener() {
 
       document.getElementById("user-input-button").classList.remove("is-danger");
       document.getElementById("user-input").classList.remove("is-danger");
-      setTimeout(() => {
-        addSongDataToPage(userInputApiCall, userInputCountry);
-      }, 2001); //clear input begin
+      await sleep(2000);
+      addSongDataToPage(userInputApiCall, userInputCountry); //clear input begin
 
       inputElement.value = ''; //clear input end
 
@@ -29404,27 +29389,8 @@ async function buttonListener() {
     }
 
     if (!countries.includes(userInputCountry)) {
-      setTimeout(() => {
-        document.getElementById("chart-content").classList.add("is-hidden");
-      }, 1000);
-      setTimeout(() => {
-        document.getElementById("add-data-points").innerHTML = "";
-      }, 1020);
-      setTimeout(() => {
-        document.getElementById("user-input-button").classList.remove("is-loading");
-      }, 1020);
-      setTimeout(() => {
-        document.getElementById("user-input-button").classList.remove("is-danger");
-      }, 1001);
-      setTimeout(() => {
-        document.getElementById("user-input-button").classList.add("is-danger");
-      }, 1001);
-      setTimeout(() => {
-        document.getElementById("user-input").classList.add("is-danger");
-      }, 1001);
-      setTimeout(() => {
-        inputElement.value = "Your request is not a valid country for this data set. Try again.";
-      }, 1000);
+      await failedSearchLoading();
+      inputElement.value = "Your request is not a valid country for this data set. Try again.";
     }
   }); // end button listen functionality
 }
@@ -29432,31 +29398,11 @@ async function buttonListener() {
 ; // end - button listener function
 // start - chart styling
 
-function addSongDataToPage(lastFMdata, visitorCountry) {
+async function addSongDataToPage(lastFMdata, visitorCountry) {
   if (lastFMdata.error) {
-    document.getElementById("user-input-button").classList.add("is-loading");
-    document.getElementById("user-input-button").classList.add("is-warning");
-    setTimeout(() => {
-      document.getElementById("user-input-button").classList.remove("is-loading");
-    }, 1020);
-    setTimeout(() => {
-      document.getElementById("user-input-button").classList.remove("is-danger");
-    }, 1001);
-    setTimeout(() => {
-      document.getElementById("user-input-button").classList.add("is-danger");
-    }, 1001);
-    setTimeout(() => {
-      document.getElementById("user-input").classList.add("is-danger");
-    }, 1000);
-    setTimeout(() => {
-      document.getElementById("add-data-points").innerHTML = "";
-    }, 1000);
-    setTimeout(() => {
-      document.getElementById("user-input").value = "".concat(visitorCountry, " is not a valid country for this data set. Try again.");
-    }, 1000);
-    setTimeout(() => {
-      document.getElementById("chart-content").classList.add("is-hidden");
-    }, 999);
+    await failedSearchLoading();
+    document.getElementById("user-input").value = "".concat(visitorCountry, " is not a valid country for this data set. Try again.");
+    document.getElementById("chart-content").classList.add("is-hidden");
     return;
   } else {
     document.getElementById("user-input-button").classList.remove("is-loading");
@@ -29599,7 +29545,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50111" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50632" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
