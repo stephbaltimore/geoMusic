@@ -29472,37 +29472,37 @@ function addSongDataToPage(lastFMdata, visitorCountry) {
 
     theadElement.appendChild(trElementWithClass); // Append to thead
 
-    const NumberThElement = document.createElement("th"); // Create a <thead> node
+    const numberThElement = document.createElement("th"); // Create a <thead> node
 
-    const NumberThText = document.createTextNode("#"); // Create a tr text node
+    const numberThText = document.createTextNode("#"); // Create a tr text node
 
-    NumberThElement.appendChild(NumberThText); // Append the text
+    numberThElement.appendChild(numberThText); // Append the text
 
-    trElementWithClass.appendChild(NumberThElement); // Append to thead
+    trElementWithClass.appendChild(numberThElement); // Append to thead
 
-    const ArtistThElement = document.createElement("th"); // Create a <thead> node
+    const artistThElement = document.createElement("th"); // Create a <thead> node
 
-    const ArtistThText = document.createTextNode("Artist"); // Create a tr text node
+    const artistThText = document.createTextNode("Artist"); // Create a tr text node
 
-    ArtistThElement.appendChild(ArtistThText); // Append the text
+    artistThElement.appendChild(artistThText); // Append the text
 
-    trElementWithClass.appendChild(ArtistThElement); // Append to thead
+    trElementWithClass.appendChild(artistThElement); // Append to thead
 
-    const SongThElement = document.createElement("th"); // Create a <thead> node
+    const songThElement = document.createElement("th"); // Create a <thead> node
 
-    const SongThText = document.createTextNode("Song"); // Create a tr text node
+    const songThText = document.createTextNode("Song"); // Create a tr text node
 
-    SongThElement.appendChild(SongThText); // Append the text
+    songThElement.appendChild(songThText); // Append the text
 
-    trElementWithClass.appendChild(SongThElement); // Append to thead
+    trElementWithClass.appendChild(songThElement); // Append to thead
 
-    const ListenThElement = document.createElement("th"); // Create a <thead> node
+    const listenThElement = document.createElement("th"); // Create a <thead> node
 
-    const ListenThText = document.createTextNode("Listen"); // Create a tr text node
+    const listenThText = document.createTextNode("Listen"); // Create a tr text node
 
-    ListenThElement.appendChild(ListenThText); // Append the text
+    listenThElement.appendChild(listenThText); // Append the text
 
-    trElementWithClass.appendChild(ListenThElement); // Append to thead
+    trElementWithClass.appendChild(listenThElement); // Append to thead
 
     const tbodyElement = document.createElement("tbody"); // Create a <tbody> node
 
@@ -29599,7 +29599,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60996" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50111" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
