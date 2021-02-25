@@ -208,7 +208,6 @@ async function onLoadHandler() {
         updateVisits(friendlyCityName, 1);
         await successMusicChart(lastFMdata,visitorCountry.country_name);        
         buttonListener();
-        makeCityDataPretty();
         return
   
       }
@@ -216,7 +215,6 @@ async function onLoadHandler() {
       if (friendlyCityName === "null, null") {
         console.log("you don't have a city defined");
         await successMusicChart(lastFMdata,visitorCountry.country_name);
-          makeCityDataPretty();
           buttonListener();
         return  
       }
@@ -233,7 +231,6 @@ async function onLoadHandler() {
           db.collection('city_data').doc(friendlyCityName).set(visitorData);
           document.getElementById("onLoad").classList.remove("is-hidden");
           await successMusicChart(lastFMdata,visitorCountry.country_name);
-          makeCityDataPretty();
           buttonListener();
           return
 
